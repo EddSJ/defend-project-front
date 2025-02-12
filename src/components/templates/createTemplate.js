@@ -64,7 +64,6 @@ const CreateTemplate = () => {
     options: [],
   });
 
-  // Maneja cambios en los campos del template (nombre, descripción, isPublic)
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setTemplate((prevTemplate) => ({
@@ -73,7 +72,6 @@ const CreateTemplate = () => {
     }));
   };
 
-  // Maneja cambios en los campos de la pregunta (texto, tipo, opciones)
   const handleQuestionChange = (e) => {
     const { name, value } = e.target;
     setQuestion((prevQuestion) => ({
@@ -82,7 +80,6 @@ const CreateTemplate = () => {
     }));
   };
 
-  // Maneja cambios en las opciones de preguntas de tipo CHECKBOX
   const handleOptionChange = (index, value) => {
     const newOptions = [...question.options];
     newOptions[index] = value;
@@ -171,7 +168,6 @@ const CreateTemplate = () => {
           <label className="form-check-label">Plantilla pública</label>
         </div>
 
-        {/* Campos de la pregunta */}
         <div className="mb-3">
           <label className="form-label">Pregunta</label>
           <input

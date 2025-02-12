@@ -135,10 +135,6 @@ const PoolShow = () => {
     navigate('/login');
   };
 
-  const handleResponseIndex = () => {
-    navigate(`/completed-templates/admin/${adminId}`)
-  };
-
   const handleSubmit = async () => {
     const answers = Object.keys(responses).map((questionId) => ({
       questionId: parseInt(questionId),
