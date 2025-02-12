@@ -41,3 +41,30 @@ export const createTemplate = async (template) => {
   const response = await api.post("/completed-templates", template);
   return response.data;
 };
+
+export const getAdmin = async (id) => {
+  const response = await api.get(`/admin/${id}`);
+  return response.data;
+};
+
+export const getCompletedTemplates = async (id) => {
+  const response = await api.get(`/completed-templates/admin/${id}`);
+  return response.data;
+};
+
+export const createPool = async (pool) => {
+  const response = await api.post("/templates", pool);
+  return response.data;
+};
+
+export const validateToken = async () => {
+  try {
+    const response = await api.get("/auth/validate-token");
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      return error.response;
+    }
+    throw error;
+  }
+}

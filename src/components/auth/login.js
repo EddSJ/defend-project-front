@@ -3,6 +3,7 @@ import { signin } from '../../services/api';
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/reducers/auth/authReducer';
+import { setAdmin } from '../../redux/reducers/admins/adminReducer';
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,9 +15,11 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await signin(email, password);
+      dispatch(setAdmin(response.admin));
       localStorage.setItem("token", response.accessToken);
+      localStorage.setItem("adminId", response.admin.id);
       dispatch(login());
-
+      navigate(-1);
     } catch (error) {
       console.error(error);
     }

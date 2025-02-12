@@ -15,7 +15,6 @@ const Templates = () => {
         const data = await getTemplates();
         dispatch(setTemplates(data));
         setPools(data);
-        console.log(data)
       } catch (error) {
         console.error("Error al obtener templates:", error);
       }
