@@ -2,6 +2,7 @@ import './styles/App.scss';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './components/protected-route';
+import AdminProtectedRoute from './components/admin-protected-route';
 import Login from './components/auth/login';
 import Register from './components/auth/register';
 import CreateTemplate from './components/templates/createTemplate';
@@ -10,6 +11,7 @@ import NotFound from './components/common/notFound';
 import PoolShow from './components/templates/poolShow';
 import AdminPoolResponses from './components/templates/adminPoolResponses';
 import Navbar from './components/common/navBar';
+import AdminIndex from './components/admin/adminIndex';
 
 function App() {
 
@@ -26,6 +28,9 @@ function App() {
           <Route path="/completed-templates/admin/:id" element={<AdminPoolResponses /> } />
           <Route element={<ProtectedRoute />}>
             <Route path="/templates" element={<CreateTemplate />} />
+          </Route>
+          <Route element={<AdminProtectedRoute />}>
+            <Route path="/users" element={<AdminIndex />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

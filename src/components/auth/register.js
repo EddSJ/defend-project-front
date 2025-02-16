@@ -7,7 +7,7 @@ const RegisterForm = () => {
   const [email, setEmail] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("ADMIN");
+  const [role, setRole] = useState("USER");
   const navigate = useNavigate();
 
 

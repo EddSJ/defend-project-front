@@ -1,42 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { getTemplate, createTemplate, getAdmin, validateToken } from '../../services/api';
+import { getTemplate, createTemplate } from '../../services/api';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { setAdmin } from '../../redux/reducers/admins/adminReducer';
-import { logout } from '../../redux/reducers/auth/authReducer';
 import { Link } from 'react-router-dom';
 import PoolComments from './poolComments';
 
 const PoolShow = () => {
-  const dispatch = useDispatch();
   const [pool, setPool] = useState({});
-  const [adminId, setAdminId] = useState(null);
   const [responses, setResponses] = useState({});
   const { id } = useParams();
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      const checkToken = async () => {
-        try {
-          console.log('nunca pasa por aqui')
-          const response = await validateToken();
-          console.log('Esta es la respuesta del servidor:', response);
-          if (response.status === 401) {
-            localStorage.removeItem('token');
-            dispatch(logout());
-          }
-        } catch (error) {
-          console.error('Error al validar token:', error);
-        }
-      }
-      checkToken();
-    }
-  }, []);
+  const adminId = useSelector((state) => state.admin.admin.id);
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -47,20 +22,6 @@ const PoolShow = () => {
         console.error("Error al obtener template:", error);
       }
     };
-    if (isAuthenticated) {
-      const fetchAndSetAdmin = async () => {
-        const storedAdminId = localStorage.getItem('adminId');
-        try {
-          const data = await getAdmin(storedAdminId);
-          console.log(data)
-          setAdminId(data.id);
-          dispatch(setAdmin(data));
-        } catch (error) {
-          console.error("Error al obtener admin:", error);
-        }
-      };
-      fetchAndSetAdmin();
-    }
     fetchTemplate();
   }, [id]);
 
@@ -188,7 +149,7 @@ const PoolShow = () => {
       <button onClick={handleBack} className="btn btn-primary mt-3">
         Volver al inicio
       </button>
-      <PoolComments adminId={adminId} />
+      <PoolComments />
     </div>
   );
 };

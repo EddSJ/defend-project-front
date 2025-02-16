@@ -2,50 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faCommenting } from '@fortawesome/free-solid-svg-icons'
-import { likeTemplate, validateToken, unlikeTemplate } from '../../services/api';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../redux/reducers/auth/authReducer';
-
+import { likeTemplate, unlikeTemplate } from '../../services/api';
+import { useSelector } from 'react-redux';
 
 const PoolCard = (props) => {
   const { name, description, questions, id, likes, likedBy, comments } = props.pool;
   const [currentLikes, setLikes] = useState(likes);
   const [hasLiked, setHasLiked] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [adminId, setAdminId] = useState(null);
-  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const adminId = useSelector((state) => state.admin.admin.id);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      const checkToken = async () => {
-        try {
-          console.log('nunca pasa por aqui')
-          const response = await validateToken();
-          console.log('Esta es la respuesta del servidor:', response);
-          if (response.status === 401) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('adminId');
-            dispatch(logout());
-          }
-          setIsAuthenticated(true);
-        } catch (error) {
-          console.error('Error al validar token:', error);
-        }
-      }
-      checkToken();
-    }
-  }, []);
-
-  useEffect(() => {
-    const storedAdminId = parseInt(localStorage.getItem('adminId'));
-    setAdminId(storedAdminId)
-    const userId = storedAdminId;
+    const userId = adminId;
     console.log('Like de admin:', userId);
     const userHasLiked = likedBy.some(user => user.id === userId);
     setHasLiked(userHasLiked);
-  }, [likedBy]);
+  }, [isAuthenticated, likedBy, adminId]);
 
   const handleLike = async () => {
     if (hasLiked) {

@@ -1,39 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { getComments, createComment, validateToken } from '../../services/api';
-import { useParams, useNavigate } from 'react-router-dom';
+import { getComments, createComment } from '../../services/api';
+import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../redux/reducers/auth/authReducer'; 
 
-const PoolComments = (props) => {
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState('');
-  const { id } = useParams();
-  const dispatch = useDispatch();
+const PoolComments = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      const checkToken = async () => {
-        try {
-          console.log('nunca pasa por aqui')
-          const response = await validateToken();
-          console.log('Esta es la respuesta del servidor:', response);
-          if (response.status === 401) {
-            localStorage.removeItem('token');
-            dispatch(logout());
-          }
-        } catch (error) {
-          console.error('Error al validar token:', error);
-        }
-      }
-      checkToken();
-    }
-  }, []);
-
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState(''); 
+  const { id } = useParams();
+  const adminId = useSelector((state) => state.admin.admin.id);
+  
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -51,7 +27,7 @@ const PoolComments = (props) => {
     if (!newComment.trim()) return;
 
     const data = {
-      authorId: props.adminId,
+      authorId: adminId,
       content: newComment,
     };
 
@@ -86,23 +62,23 @@ const PoolComments = (props) => {
 
   return (
     <div className="mt-4">
-      { isAuthenticated ? (
-      <>
-        <h3>Comentarios</h3>
-        <div className="mb-3">
-          <textarea
-            className="form-control"
-            rows="3"
-            placeholder="Escribe tu comentario..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
-          <button onClick={handleCommentSubmit} className="btn btn-primary mt-2">
-            Enviar Comentario
-          </button>
-        </div>
-      </>)
-      : ( null )}
+      { isAuthenticated && (
+        <>
+          <h3>Comentarios</h3>
+          <div className="mb-3">
+            <textarea
+              className="form-control"
+              rows="3"
+              placeholder="Escribe tu comentario..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <button onClick={handleCommentSubmit} className="btn btn-primary mt-2">
+              Enviar Comentario
+            </button>
+          </div>
+        </>
+      )}
       <div>
         {comments.map((comment) => (
           <div key={comment.id} className="card mb-2">

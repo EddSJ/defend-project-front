@@ -1,53 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { createPool, getAdmin, validateToken } from "../../services/api";
+import React, { useState } from "react";
+import { createPool } from "../../services/api";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../redux/reducers/auth/authReducer';
-import { setAdmin } from '../../redux/reducers/admins/adminReducer';
+import { useSelector } from 'react-redux';
 
 
 const CreateTemplate = () => {
-    const dispatch = useDispatch();
-    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-    const [currentAdminId, setCurrentAdminId] = useState(null);
-  
-    useEffect(() => {
-      const token = localStorage.getItem('token');
-  
-      if (token) {
-        const checkToken = async () => {
-          try {
-            console.log('nunca pasa por aqui')
-            const response = await validateToken();
-            console.log('Esta es la respuesta del servidor:', response);
-            if (response.status === 401) {
-              localStorage.removeItem('token');
-              dispatch(logout());
-            }
-          } catch (error) {
-            console.error('Error al validar token:', error);
-          }
-        }
-        checkToken();
-      }
-    }, []);
-
-    useEffect(() => {
-      if (isAuthenticated) {
-        const fetchAndSetAdmin = async () => {
-          const storedAdminId = localStorage.getItem('adminId');
-          try {
-            const data = await getAdmin(storedAdminId);
-            console.log(data)
-            setCurrentAdminId(data.id);
-            dispatch(setAdmin(data));
-          } catch (error) {
-            console.error("Error al obtener admin:", error);
-          }
-        };
-        fetchAndSetAdmin();
-      }
-    }, [])
+  const currentAdminId  = useSelector((state) => state.admin.admin.id);
 
   const navigate = useNavigate();
   const [template, setTemplate] = useState({
