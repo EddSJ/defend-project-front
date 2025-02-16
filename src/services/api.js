@@ -17,8 +17,8 @@ api.interceptors.request.use(
   }
 );
 
-export const signup = async () => {
-  const response = await api.post("/auth/signup");
+export const signup = async (name, lastName, email, password, role) => {
+  const response = await api.post("/auth/signup", { name, lastName, email, password, role } );
   return response.data;
 }; 
 
@@ -56,6 +56,26 @@ export const createPool = async (pool) => {
   const response = await api.post("/templates", pool);
   return response.data;
 };
+
+export const getComments = async (id) => {
+  const response = await api.get(`/templates/${id}/comment`);
+  return response.data;
+}
+
+export const createComment = async (id, comment) => {
+  const response = await api.post(`/templates/${id}/comment`, comment);
+  return response.data;
+}
+
+export const likeTemplate = async (id, adminId) => {
+  const response = await api.post(`/templates/${id}/like`, adminId);
+  return response.data;
+}
+
+export const unlikeTemplate = async (id, adminId) => {
+  const response = await api.post(`/templates/${id}/unlike`, adminId);
+  return response.data;
+}
 
 export const validateToken = async () => {
   try {

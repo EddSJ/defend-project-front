@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { setAdmin } from '../../redux/reducers/admins/adminReducer';
 import { logout } from '../../redux/reducers/auth/authReducer';
 import { Link } from 'react-router-dom';
+import PoolComments from './poolComments';
 
 const PoolShow = () => {
   const dispatch = useDispatch();
@@ -187,6 +188,7 @@ const PoolShow = () => {
       <button onClick={handleBack} className="btn btn-primary mt-3">
         Volver al inicio
       </button>
+      <PoolComments adminId={adminId} />
     </div>
   );
 };
