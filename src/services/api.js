@@ -42,6 +42,32 @@ export const createTemplate = async (template) => {
   return response.data;
 };
 
+export const getAdmins = async () => {
+  const response = await api.get('/admins');
+  return response.data;
+}
+
+export const blockAdmins = async (ids) => {
+  const response = await api.post('/admin/block', ids)
+  return response.data;
+}
+
+export const unblockAdmins = async (ids) => {
+  const response = await api.post('/admin/unblock', ids)
+  return response.data;
+}
+
+export const deleteAdmins = async (ids) => {
+  console.log('estan pasando en endpoint', ids)
+  const response = await api.post('/admins/delete', ids)
+  return response.data;
+}
+
+export const createAdmin = async (admin) => {
+  const response = await api.post('/admins', admin)
+  return response.data;
+}
+
 export const getAdmin = async (id) => {
   const response = await api.get(`/admin/${id}`);
   return response.data;

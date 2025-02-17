@@ -12,6 +12,7 @@ import PoolShow from './components/templates/poolShow';
 import AdminPoolResponses from './components/templates/adminPoolResponses';
 import Navbar from './components/common/navBar';
 import AdminIndex from './components/admin/adminIndex';
+import CreateAdminForm from './components/admin/createAdminForm';
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
           </Route>
           <Route element={<AdminProtectedRoute />}>
             <Route path="/users" element={<AdminIndex />} />
+            <Route path="/user" element={<CreateAdminForm />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
