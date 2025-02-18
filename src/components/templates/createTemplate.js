@@ -3,17 +3,15 @@ import { createPool } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
 
-
 const CreateTemplate = () => {
-  const currentAdminId  = useSelector((state) => state.admin.admin.id);
-
+  const currentAdminId = useSelector((state) => state.admin.admin.id);
   const navigate = useNavigate();
   const [template, setTemplate] = useState({
     name: "",
     description: "",
     isPublic: true,
     questions: [],
-    adminId: null
+    adminId: null,
   });
 
   const [question, setQuestion] = useState({
@@ -74,6 +72,24 @@ const CreateTemplate = () => {
       type: "TEXT",
       options: [],
     });
+  };
+
+  const handleEditQuestion = (index, field, value) => {
+    const newQuestions = [...template.questions];
+    newQuestions[index][field] = value;
+    setTemplate((prevTemplate) => ({
+      ...prevTemplate,
+      questions: newQuestions,
+    }));
+  };
+
+  const handleEditOption = (questionIndex, optionIndex, value) => {
+    const newQuestions = [...template.questions];
+    newQuestions[questionIndex].options[optionIndex] = value;
+    setTemplate((prevTemplate) => ({
+      ...prevTemplate,
+      questions: newQuestions,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -187,12 +203,25 @@ const CreateTemplate = () => {
           {template.questions.map((q, index) => (
             <div key={index} className="mb-3">
               <p>
-                <strong>Pregunta {index + 1}:</strong> {q.text} ({q.type})
+                <strong>Pregunta {index + 1}:</strong>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={q.text}
+                  onChange={(e) => handleEditQuestion(index, 'text', e.target.value)}
+                />
               </p>
               {q.type === "CHECKBOX" && (
                 <ul>
                   {q.options.map((option, idx) => (
-                    <li key={idx}>{option}</li>
+                    <li key={idx}>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={option}
+                        onChange={(e) => handleEditOption(index, idx, e.target.value)}
+                      />
+                    </li>
                   ))}
                 </ul>
               )}

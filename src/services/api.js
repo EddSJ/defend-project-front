@@ -42,6 +42,11 @@ export const createTemplate = async (template) => {
   return response.data;
 };
 
+export const editTempplate = async (id, template) => {
+  const response = await api.put(`/templates/${id}`, template)
+  return response.data;
+}
+
 export const getAdmins = async () => {
   const response = await api.get('/admins');
   return response.data;

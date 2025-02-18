@@ -12,18 +12,22 @@ const PoolShow = () => {
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const adminId = useSelector((state) => state.admin.admin.id);
+  const adminRole = useSelector((state) => state.admin.admin.role)
 
   useEffect(() => {
     const fetchTemplate = async () => {
       try {
         const data = await getTemplate(id);
+        console.log("esta es la data del template en show para sacar el admin: ", data)     
         setPool(data);
       } catch (error) {
         console.error("Error al obtener template:", error);
       }
     };
     fetchTemplate();
+
   }, [id]);
+
 
   const handleResponseChange = (questionId, value) => {
     setResponses((prevResponses) => ({
@@ -118,6 +122,14 @@ const PoolShow = () => {
     }
   };
 
+  const adminOrCreator = () => {
+    if (pool.adminId === adminId || adminRole === "ADMIN") {
+      return true
+    } else {
+      return false
+    }
+  }
+
   return (
     <div className="card shadow-sm mb-4 p-4">
       <h1>{pool.name}</h1>
@@ -129,6 +141,8 @@ const PoolShow = () => {
           <div key={question.id} className="mb-3">
             <label className="form-label">{question.question}</label>
             {renderInput(question)}
+            {`id del que creo el pool: ${pool.adminId}`}
+            {`id del que esta logeado: ${adminId}`}
           </div>
         ))}
       </form>
@@ -144,6 +158,11 @@ const PoolShow = () => {
           <Link to={`/completed-templates/admin/${pool.id}`} className="btn btn-primary mt-3">
             Ver respuestas de la plantilla   
           </Link>
+          {adminOrCreator() && (
+            <Link to={`/template/${pool.id}/edit`} className="btn btn-primary mt-3">
+              Editar Plantilla   
+            </Link>
+          )}
         </>
       )}
       <button onClick={handleBack} className="btn btn-primary mt-3">
