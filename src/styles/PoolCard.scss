@@ -4,3 +4,13 @@
   justify-content: space-around;
   align-items: center;
 }
+
+.trash {
+  color: rgb(126, 126, 126);
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+.trash:hover {
+  color: rgb(200, 0, 0);
+}

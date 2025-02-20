@@ -14,6 +14,7 @@ import Navbar from './components/common/navBar';
 import AdminIndex from './components/admin/adminIndex';
 import CreateAdminForm from './components/admin/createAdminForm';
 import EditTemplate from './components/templates/editTempplate';
+import UserTemplates from './components/templates/userTemplates';
 
 function App() {
 
@@ -29,7 +30,8 @@ function App() {
           <Route path="/templates/:id" element={<PoolShow /> } />
           <Route path="/completed-templates/admin/:id" element={<AdminPoolResponses /> } />
           <Route element={<ProtectedRoute />}>
-            <Route path="/templates" element={<CreateTemplate />} />
+            <Route path="/templates/admin/:id" element={<UserTemplates />} />
+            <Route path="/templates/create" element={<CreateTemplate />} />
             <Route path="/template/:id/edit" element={<EditTemplate />} />
           </Route>
           <Route element={<AdminProtectedRoute />}>

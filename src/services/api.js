@@ -32,6 +32,16 @@ export const getTemplates = async () => {
   return response.data;
 };
 
+export const getAdminTemplates = async (adminId) => {
+  const response = await api.get(`/templates/admin/${adminId}`);
+  return response.data;
+};
+
+export const deleteTemplate = async (id) => {
+  const response = await api.delete(`/templates/${id}`);
+  return response.data;
+};
+
 export const getTemplate = async (id) => {
   const response = await api.get(`/templates/${id}`);
   return response.data;

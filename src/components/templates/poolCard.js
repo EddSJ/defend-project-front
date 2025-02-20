@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faCommenting } from '@fortawesome/free-solid-svg-icons'
+import { faHeart, faCommenting, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { likeTemplate, unlikeTemplate } from '../../services/api';
 import { useSelector } from 'react-redux';
 
@@ -11,6 +11,7 @@ const PoolCard = (props) => {
   const [hasLiked, setHasLiked] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const adminId = useSelector((state) => state.admin.admin.id);
+  
 
   useEffect(() => {
     const userId = adminId;
@@ -48,6 +49,10 @@ const PoolCard = (props) => {
     } catch (error) {
       console.error('Error al dar like:', error);
     }
+  }
+
+  const deleteTemplate = () => {
+    props.deleteAction(id)
   }
 
 
@@ -91,9 +96,16 @@ const PoolCard = (props) => {
             <FontAwesomeIcon icon={faCommenting} className="me-2" />
             <span>{comments.length}</span>
           </div>
+          {props.deleteAction &&
+            <div onClick={deleteTemplate} className="d-flex align-items-center trash">
+              <FontAwesomeIcon icon={faTrash} className="me-2" />
+            </div>
+          }
         </div>
       </div>
     </div>
   );
 }
 export default PoolCard;
+<FontAwesomeIcon icon={faTrash} className="me-2" />
+

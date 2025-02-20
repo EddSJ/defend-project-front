@@ -10,6 +10,7 @@ const Navbar = ( ) => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const adminRole = useSelector((state) => state.admin.admin.role);
+  const currentAdminId = useSelector((state) => state.admin.admin.id);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -78,7 +79,7 @@ const Navbar = ( ) => {
         )}
         {isAuthenticated && (
           <>
-            <Link to="/templates" className="navbar-link">
+            <Link to={`templates/admin/${currentAdminId}`} className="navbar-link">
               Plantillas
             </Link>
             <button onClick={handleLogout} className="navbar-link logout-button">
