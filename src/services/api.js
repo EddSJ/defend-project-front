@@ -27,13 +27,13 @@ export const signin = async (email, password) => {
   return response.data;
 };
 
-export const getTemplates = async () => {
-  const response = await api.get("/templates");
+export const getTemplates = async (searchTerm = "") => {
+  const response = await api.get(`/templates?searcj=${searchTerm}`);
   return response.data;
 };
 
-export const getAdminTemplates = async (adminId) => {
-  const response = await api.get(`/templates/admin/${adminId}`);
+export const getAdminTemplates = async (adminId, searchTerm = "") => {
+  const response = await api.get(`/templates/admin/${adminId}?search=${searchTerm}`);
   return response.data;
 };
 
