@@ -4,8 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/reducers/auth/authReducer';
 import { validateToken, getAdmin } from '../../services/api';
 import { setAdmin } from '../../redux/reducers/admins/adminReducer';
+import { faEarthAmericas } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { translations } from '../translations';
+import { setLang } from '../../redux/reducers/lang';
 
-const Navbar = ( ) => {
+const Navbar = () => {
+  const currentLang = useSelector((state) => state.lang.lang)
+  const t = translations[currentLang]
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -19,6 +25,11 @@ const Navbar = ( ) => {
     dispatch(logout());
     navigate('/');
   };
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem('lang') || 'en';
+    dispatch(setLang(savedLang));
+  }, [dispatch]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -55,6 +66,12 @@ const Navbar = ( ) => {
     }
   }, [isAuthenticated, dispatch]);
 
+  const changeLang = () => {
+    const newLang = currentLang === "en" ? "es" : "en";
+    dispatch(setLang(newLang));
+    localStorage.setItem('lang', newLang)
+  }
+
 
   return (
     <nav className="navbar">
@@ -65,33 +82,36 @@ const Navbar = ( ) => {
       </div>
       <div className="navbar-links">
         <Link to="/" className="navbar-link">
-          Inicio
+          {t.navBar.home}
         </Link>
         {!isAuthenticated && (
           <>
             <Link to="/login" className="navbar-link">
-              Iniciar Sesión
+              {t.navBar.signIn}
             </Link>
             <Link to="/register" className="navbar-link">
-              Registrarse
+              {t.navBar.signUp}
             </Link>
           </>
         )}
         {isAuthenticated && (
           <>
             <Link to={`templates/admin/${currentAdminId}`} className="navbar-link">
-              Plantillas
+              {t.navBar.polls} 
             </Link>
             <button onClick={handleLogout} className="navbar-link logout-button">
-              Cerrar Sesión
+              {t.navBar.signOut}
             </button>
             {adminRole === 'ADMIN' && (
               <Link to="/users" className="navbar-link">
-                Users
+                {t.navBar.users}
               </Link>
             )}
           </>
         )}
+        <button onClick={changeLang} className="navbar-link logout-button">
+          {t.common.lang} <FontAwesomeIcon icon={faEarthAmericas} />
+        </button>
       </div>
     </nav>
   );

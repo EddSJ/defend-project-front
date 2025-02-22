@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import { createPool } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from 'react-redux';
+import Swal from "sweetalert2";
+import { translations } from '../translations';
 
 const CreateTemplate = () => {
   const currentAdminId = useSelector((state) => state.admin.admin.id);
+  const currentLang = useSelector((state) => state.lang.lang);
+  const t = translations[currentLang];
   const navigate = useNavigate();
   const [template, setTemplate] = useState({
     name: "",
@@ -58,7 +62,12 @@ const CreateTemplate = () => {
     ).length;
 
     if (countByType >= 4) {
-      alert(`No puedes agregar más de 4 preguntas del tipo ${question.type}.`);
+      Swal.fire({
+        icon: "warning",
+        title: t.createTemplate.maxQuestions,
+        text: `${t.createTemplate.maxQuestions} ${question.type}.`,
+        confirmButtonText: "OK",
+      });
       return;
     }
 
@@ -98,20 +107,30 @@ const CreateTemplate = () => {
       template.adminId = currentAdminId;
       const response = await createPool(template);
       console.log("Template creado:", response);
-      alert("Plantilla creada exitosamente");
-      navigate("/");
+      Swal.fire({
+        icon: "success",
+        title: t.createTemplate.success,
+        confirmButtonText: "OK",
+      }).then(() => {
+        navigate("/");
+      });
     } catch (error) {
-      console.error("Error al crear la plantilla:", error);
-      alert("Hubo un error al crear la plantilla");
+      console.error(t.createTemplate.error, error);
+      Swal.fire({
+        icon: "error",
+        title: t.createTemplate.error,
+        text: error.message || "Unknown error",
+        confirmButtonText: "Try Again",
+      });
     }
   };
 
   return (
     <div className="container mt-4">
-      <h1>Crear Plantilla</h1>
+      <h1>{t.createTemplate.createTemplateButton}</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label className="form-label">Nombre de la plantilla</label>
+          <label className="form-label">{t.createTemplate.templateName}</label>
           <input
             type="text"
             name="name"
@@ -122,7 +141,7 @@ const CreateTemplate = () => {
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Descripción</label>
+          <label className="form-label">{t.createTemplate.description}</label>
           <textarea
             name="description"
             className="form-control"
@@ -139,11 +158,11 @@ const CreateTemplate = () => {
             checked={template.isPublic}
             onChange={handleInputChange}
           />
-          <label className="form-check-label">Plantilla pública</label>
+          <label className="form-check-label">{t.createTemplate.publicTemplate}</label>
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Pregunta</label>
+          <label className="form-label">{t.createTemplate.question}</label>
           <input
             type="text"
             name="text"
@@ -153,7 +172,7 @@ const CreateTemplate = () => {
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Tipo de pregunta</label>
+          <label className="form-label">{t.createTemplate.questionType}</label>
           <select
             name="type"
             className="form-select"
@@ -169,7 +188,7 @@ const CreateTemplate = () => {
         </div>
         {question.type === "CHECKBOX" && (
           <div className="mb-3">
-            <label className="form-label">Opciones</label>
+            <label className="form-label">{t.createTemplate.options}</label>
             {question.options.map((option, index) => (
               <div key={index} className="mb-2">
                 <input
@@ -186,7 +205,7 @@ const CreateTemplate = () => {
               className="btn btn-secondary"
               onClick={addOption}
             >
-              Agregar Opción
+              {t.createTemplate.addOption}
             </button>
           </div>
         )}
@@ -195,15 +214,15 @@ const CreateTemplate = () => {
           className="btn btn-primary"
           onClick={addQuestion}
         >
-          Agregar Pregunta
+          {t.createTemplate.addQuestion}
         </button>
 
         <div className="mt-4">
-          <h3>Preguntas agregadas</h3>
+          <h3>{t.createTemplate.addedQuestions}</h3>
           {template.questions.map((q, index) => (
             <div key={index} className="mb-3">
               <p>
-                <strong>Pregunta {index + 1}:</strong>
+                <strong>{t.createTemplate.question} {index + 1}:</strong>
                 <input
                   type="text"
                   className="form-control"
@@ -230,7 +249,7 @@ const CreateTemplate = () => {
         </div>
 
         <button type="submit" className="btn btn-success mt-3">
-          Crear Plantilla
+          {t.createTemplate.createTemplateButton}
         </button>
       </form>
     </div>

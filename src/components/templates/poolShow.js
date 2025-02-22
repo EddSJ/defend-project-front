@@ -4,6 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PoolComments from './poolComments';
+import Swal from 'sweetalert2';
+import { translations } from '../translations';
 
 const PoolShow = () => {
   const [pool, setPool] = useState({});
@@ -12,22 +14,28 @@ const PoolShow = () => {
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const adminId = useSelector((state) => state.admin.admin.id);
-  const adminRole = useSelector((state) => state.admin.admin.role)
+  const adminRole = useSelector((state) => state.admin.admin.role);
+  const currentLang = useSelector((state) => state.lang.lang);
+  const t = translations[currentLang];
 
   useEffect(() => {
     const fetchTemplate = async () => {
       try {
         const data = await getTemplate(id);
-        console.log("esta es la data del template en show para sacar el admin: ", data)     
+        console.log("esta es la data del template en show para sacar el admin: ", data);
         setPool(data);
       } catch (error) {
-        console.error("Error al obtener template:", error);
+        console.error(t.poolShow.formError, error);
+        Swal.fire({
+          icon: "error",
+          title: t.poolShow.formError,
+          text: error.message || "Unknown error",
+          confirmButtonText: "OK",
+        });
       }
     };
     fetchTemplate();
-
-  }, [id]);
-
+  }, [id, t]);
 
   const handleResponseChange = (questionId, value) => {
     setResponses((prevResponses) => ({
@@ -57,7 +65,7 @@ const PoolShow = () => {
             value={responses[question.id] || ''}
             onChange={(e) => handleResponseChange(question.id, e.target.value)}
           />
-        )
+        );
       case 'CHECKBOX':
         return (
           <div>
@@ -89,7 +97,7 @@ const PoolShow = () => {
             value={responses[question.id] || ''}
             onChange={(e) => handleResponseChange(question.id, e.target.value)}
           />
-        )
+        );
     }
   };
 
@@ -115,26 +123,35 @@ const PoolShow = () => {
       const response = await createTemplate(data);
       console.log('Respuesta del servidor:', response);
       setResponses({});
-      alert('Formulario enviado correctamente');
+      Swal.fire({
+        icon: "success",
+        title: t.poolShow.formSubmitted,
+        confirmButtonText: "OK",
+      });
     } catch (error) {
-      console.error('Error al enviar el formulario:', error);
-      alert('Hubo un error al enviar el formulario');
+      console.error(t.poolShow.formError, error);
+      Swal.fire({
+        icon: "error",
+        title: t.poolShow.formError,
+        text: error.message || "Unknown error",
+        confirmButtonText: "Try Again",
+      });
     }
   };
 
   const adminOrCreator = () => {
     if (pool.adminId === adminId || adminRole === "ADMIN") {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
-  }
+  };
 
   return (
     <div className="card shadow-sm mb-4 p-4">
       <h1>{pool.name}</h1>
       <p>{pool.description}</p>
-      <p><strong>Creado por:</strong> {pool.admin?.name}</p>
+      <p><strong>{t.poolShow.createdBy}</strong> {pool.admin?.name}</p>
 
       <form>
         {pool.questions?.map((question) => (
@@ -148,25 +165,25 @@ const PoolShow = () => {
       </form>
       {!isAuthenticated ? (
         <button onClick={handleLoginRedirect} className="btn btn-warning mt-3">
-          Iniciar Sesión para Contestar Encuesta
+          {t.poolShow.loginToAnswer}
         </button>
       ) : (
         <>
           <button onClick={handleSubmit} className="btn btn-success mt-3">
-            Enviar
+            {t.poolShow.submit}
           </button>
           <Link to={`/completed-templates/admin/${pool.id}`} className="btn btn-primary mt-3">
-            Ver respuestas de la plantilla   
+            {t.poolShow.viewResponses}
           </Link>
           {adminOrCreator() && (
             <Link to={`/template/${pool.id}/edit`} className="btn btn-primary mt-3">
-              Editar Plantilla   
+              {t.poolShow.editTemplate}
             </Link>
           )}
         </>
       )}
       <button onClick={handleBack} className="btn btn-primary mt-3">
-        Volver al inicio
+        {t.poolShow.backToHome}
       </button>
       <PoolComments />
     </div>

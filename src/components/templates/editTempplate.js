@@ -2,12 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getTemplate, editTempplate } from "../../services/api";
+import Swal from "sweetalert2";
+import { translations } from '../translations';
 
 const EditTemplate = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const currentAdminId = useSelector((state) => state.admin.admin.id);
   const currentAdminRole = useSelector((state) => state.admin.admin.role);
+  const currentLang = useSelector((state) => state.lang.lang);
+  const t = translations[currentLang];
 
   const [template, setTemplate] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,23 +22,35 @@ const EditTemplate = () => {
         const response = await getTemplate(id);
         setTemplate(response);
       } catch (error) {
-        console.error("Error al obtener la plantilla:", error);
-        alert("No se pudo cargar la plantilla");
-        navigate("/");
+        console.error(t.editTemplate.errorLoading, error);
+        Swal.fire({
+          icon: "error",
+          title: t.editTemplate.errorLoading,
+          text: error.message || "Unknown error",
+          confirmButtonText: "OK",
+        }).then(() => {
+          navigate("/");
+        });
       } finally {
         setLoading(false);
       }
     };
     fetchTemplate();
-  }, [id, navigate]);
+  }, [id, navigate, t]);
 
   useEffect(() => {
     if (!loading && template) {
       if (currentAdminId !== template.adminId && currentAdminRole !== "ADMIN") {
-        navigate("/");
+        Swal.fire({
+          icon: "warning",
+          title: t.editTemplate.unauthorized,
+          confirmButtonText: "OK",
+        }).then(() => {
+          navigate("/");
+        });
       }
     }
-  }, [template, loading, currentAdminId, currentAdminRole, navigate]);
+  }, [template, loading, currentAdminId, currentAdminRole, navigate, t]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -67,28 +83,38 @@ const EditTemplate = () => {
     try {
       template.adminId = currentAdminId;
       await editTempplate(id, template);
-      alert("Plantilla actualizada exitosamente");
-      navigate("/");
+      Swal.fire({
+        icon: "success",
+        title: t.editTemplate.success,
+        confirmButtonText: "OK",
+      }).then(() => {
+        navigate("/");
+      });
     } catch (error) {
-      console.error("Error al actualizar la plantilla:", error);
-      alert("Hubo un error al actualizar la plantilla");
+      console.error(t.editTemplate.error, error);
+      Swal.fire({
+        icon: "error",
+        title: t.editTemplate.error,
+        text: error.message || "Unknown error",
+        confirmButtonText: "Try Again",
+      });
     }
   };
 
   if (loading) {
-    return <p>Cargando...</p>;
+    return <p>{t.editTemplate.loading}</p>;
   }
 
   if (!template) {
-    return <p>Error al cargar la plantilla.</p>;
+    return <p>{t.editTemplate.errorLoading}</p>;
   }
 
   return (
     <div className="container mt-4">
-      <h1>Editar Plantilla</h1>
+      <h1>{t.editTemplate.saveChanges}</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label className="form-label">Nombre de la plantilla</label>
+          <label className="form-label">{t.editTemplate.templateName}</label>
           <input
             type="text"
             name="name"
@@ -99,7 +125,7 @@ const EditTemplate = () => {
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Descripción</label>
+          <label className="form-label">{t.editTemplate.description}</label>
           <textarea
             name="description"
             className="form-control"
@@ -116,14 +142,14 @@ const EditTemplate = () => {
             checked={template.isPublic}
             onChange={handleInputChange}
           />
-          <label className="form-check-label">Plantilla pública</label>
+          <label className="form-check-label">{t.editTemplate.publicTemplate}</label>
         </div>
         <div className="mt-4">
-          <h3>Preguntas</h3>
+          <h3>{t.editTemplate.questions}</h3>
           {template.questions.map((q, index) => (
             <div key={q.id} className="mb-3">
               <p>
-                <strong>Pregunta {index + 1}:</strong>
+                <strong>{t.editTemplate.questions} {index + 1}:</strong>
                 <input
                   type="text"
                   className="form-control"
@@ -131,7 +157,7 @@ const EditTemplate = () => {
                   onChange={(e) => handleEditQuestion(index, "question", e.target.value)}
                 />
               </p>
-              <label className="form-label">Tipo de pregunta</label>
+              <label className="form-label">{t.editTemplate.questionType}</label>
               <select
                 className="form-select"
                 value={q.type}
@@ -140,7 +166,7 @@ const EditTemplate = () => {
                 <option value="TEXT">Texto</option>
                 <option value="NUMBER">Número</option>
                 <option value="TEXTAREA">Área de texto</option>
-                <option value="CHECKBOX">Múltiples opciones</option>
+                <option value="CHECKBOX">{t.editTemplate.multipleOptions}</option>
               </select>
               {q.type === "CHECKBOX" && (
                 <ul>
@@ -160,7 +186,7 @@ const EditTemplate = () => {
           ))}
         </div>
         <button type="submit" className="btn btn-success mt-3">
-          Guardar Cambios
+          {t.editTemplate.saveChanges}
         </button>
       </form>
     </div>

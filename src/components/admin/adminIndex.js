@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import ActionToolbar from "./actionToolBar";
 import { getAdmins, blockAdmins, unblockAdmins, deleteAdmins } from "../../services/api";
+import { useSelector } from "react-redux";
+import Swal from 'sweetalert2';
+import { translations } from '../translations'; // Importar el archivo de traducciones
 
 const AdminIndex = () => {
   const [admins, setAdmins] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [error, setError] = useState(null);
+  const currentLang = useSelector((state) => state.lang.lang); // Obtener el idioma actual
+  const t = translations[currentLang]; // Acceder a las traducciones
 
   const handleAction = async (action) => {
     try {
@@ -20,8 +25,19 @@ const AdminIndex = () => {
       }  
       setAdmins(response);
       setSelectedUsers([]);
+      Swal.fire({
+        icon: "success",
+        title: `Admins ${action}ed successfully!`,
+        confirmButtonText: "OK",
+      });
     } catch (error) {
-      setError(`Failed to ${action} admins. Please try again.`);
+      setError(t.adminIndex.error.replace("{action}", action));
+      Swal.fire({
+        icon: "error",
+        title: t.adminIndex.error.replace("{action}", action),
+        text: error.message || "Unknown error",
+        confirmButtonText: "Try Again",
+      });
       console.error("Error handling action: ", error);
     }
   };
@@ -33,6 +49,12 @@ const AdminIndex = () => {
         setAdmins(response);
       } catch (error) {
         console.error("Error fetching admins: ", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error fetching admins",
+          text: error.message || "Unknown error",
+          confirmButtonText: "OK",
+        });
       }
     };
     fetchAdmins();
@@ -59,12 +81,13 @@ const AdminIndex = () => {
                     )
                   }
                 />
+                <label>{t.adminIndex.selectAll}</label>
               </th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Last Name</th>
-              <th>Role</th>
-              <th>Status</th>
+              <th>{t.adminIndex.name}</th>
+              <th>{t.adminIndex.email}</th>
+              <th>{t.adminIndex.lastName}</th>
+              <th>{t.adminIndex.role}</th>
+              <th>{t.adminIndex.status}</th>
             </tr>
           </thead>
           <tbody>
@@ -87,7 +110,7 @@ const AdminIndex = () => {
                 <td>{admin.email}</td>
                 <td>{admin.lastName}</td>
                 <td>{admin.role}</td>
-                <td>{admin.isBlocked ? "Blocked" : "Active"}</td>
+                <td>{admin.isBlocked ? t.adminIndex.blocked : t.adminIndex.active}</td>
               </tr>
             ))}
           </tbody>

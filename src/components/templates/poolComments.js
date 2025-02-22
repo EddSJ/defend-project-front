@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { getComments, createComment } from '../../services/api';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+import { translations } from '../translations';
 
 const PoolComments = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -9,7 +11,9 @@ const PoolComments = () => {
   const [newComment, setNewComment] = useState(''); 
   const { id } = useParams();
   const adminId = useSelector((state) => state.admin.admin.id);
-  
+  const currentLang = useSelector((state) => state.lang.lang);
+  const t = translations[currentLang];
+
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -17,11 +21,17 @@ const PoolComments = () => {
         console.log('data:', data);
         setComments(data);
       } catch (error) {
-        console.error("Error al obtener comentarios:", error);
+        console.error(t.poolComments.errorFetchingComments, error);
+        Swal.fire({
+          icon: "error",
+          title: t.poolComments.errorFetchingComments,
+          text: error.message || "Unknown error",
+          confirmButtonText: "OK",
+        });
       }
     };
     fetchComments();
-  }, [id]);
+  }, [id, t]);
 
   const handleCommentSubmit = async () => {
     if (!newComment.trim()) return;
@@ -33,18 +43,23 @@ const PoolComments = () => {
 
     console.log('data:', data);
     try {
-
       const response = await createComment(id, data);
       setComments([...comments, response]);
       setNewComment('');
     } catch (error) {
-      console.error("Error al crear comentario:", error);
+      console.error(t.poolComments.errorCreatingComment, error);
+      Swal.fire({
+        icon: "error",
+        title: t.poolComments.errorCreatingComment,
+        text: error.message || "Unknown error",
+        confirmButtonText: "Try Again",
+      });
     }
   };
 
   const fullName = (author) => {
     return `${author.name} ${author.lastName}`;
-  }
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -58,23 +73,23 @@ const PoolComments = () => {
     const seconds = String(date.getSeconds()).padStart(2, '0');
 
     return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
-  }
+  };
 
   return (
     <div className="mt-4">
       { isAuthenticated && (
         <>
-          <h3>Comentarios</h3>
+          <h3>{t.poolComments.comments}</h3>
           <div className="mb-3">
             <textarea
               className="form-control"
               rows="3"
-              placeholder="Escribe tu comentario..."
+              placeholder={t.poolComments.writeComment}
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
             />
             <button onClick={handleCommentSubmit} className="btn btn-primary mt-2">
-              Enviar Comentario
+              {t.poolComments.sendComment}
             </button>
           </div>
         </>
@@ -85,8 +100,8 @@ const PoolComments = () => {
             <div className="card-body">
               <p className="card-text">{comment.content}</p>
               <div className="d-flex justify-content-between">
-                <small className="text-muted">Por: {fullName(comment.author)}</small>
-                <small className="text-muted">Creado: {formatDate(comment.createdAt)}</small>
+                <small className="text-muted">{t.poolComments.by} {fullName(comment.author)}</small>
+                <small className="text-muted">{t.poolComments.createdAt} {formatDate(comment.createdAt)}</small>
               </div>
             </div>
           </div>

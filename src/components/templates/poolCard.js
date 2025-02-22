@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faCommenting, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faHeart, faCommenting, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { likeTemplate, unlikeTemplate } from '../../services/api';
 import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+import { translations } from '../translations'; // Importar el archivo de traducciones
 
 const PoolCard = (props) => {
   const { name, description, questions, id, likes, likedBy, comments } = props.pool;
@@ -11,7 +13,8 @@ const PoolCard = (props) => {
   const [hasLiked, setHasLiked] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const adminId = useSelector((state) => state.admin.admin.id);
-  
+  const currentLang = useSelector((state) => state.lang.lang); // Obtener el idioma actual
+  const t = translations[currentLang]; // Acceder a las traducciones
 
   useEffect(() => {
     const userId = adminId;
@@ -22,39 +25,54 @@ const PoolCard = (props) => {
 
   const handleLike = async () => {
     if (hasLiked) {
-      alert('Ya has dado like a esta encuesta');
+      Swal.fire({
+        icon: "warning",
+        title: t.poolCard.alreadyLiked,
+        confirmButtonText: "OK",
+      });
       return;
     }
 
     try {
       const data = {
         userId: adminId
-      }
+      };
       const response = await likeTemplate(id, data);
       setLikes(response.likes);
       setHasLiked(true);
     } catch (error) {
-      console.error('Error al dar like:', error);
+      console.error(t.poolCard.likeError, error);
+      Swal.fire({
+        icon: "error",
+        title: t.poolCard.likeError,
+        text: error.message || "Unknown error",
+        confirmButtonText: "Try Again",
+      });
     }
-  }
+  };
 
   const handleUnlike = async () => {
     try {
       const data = {
         userId: adminId
-      }
+      };
       const response = await unlikeTemplate(id, data);
       setLikes(response.likes);
       setHasLiked(false);
     } catch (error) {
-      console.error('Error al dar like:', error);
+      console.error(t.poolCard.unlikeError, error);
+      Swal.fire({
+        icon: "error",
+        title: t.poolCard.unlikeError,
+        text: error.message || "Unknown error",
+        confirmButtonText: "Try Again",
+      });
     }
-  }
+  };
 
   const deleteTemplate = () => {
-    props.deleteAction(id)
-  }
-
+    props.deleteAction(id);
+  };
 
   return (
     <div className="card shadow-sm mb-4">
@@ -67,7 +85,7 @@ const PoolCard = (props) => {
         </p>
 
         <div className="mt-3" style={{ height: "200px", overflowY: "auto" }}>
-          <h6>Preguntas:</h6>
+          <h6>{t.poolCard.questions}:</h6>
           <ul className="list-group">
             {questions.slice(0, 3).map((question, index) => (
               <li key={question.id} className="list-group-item">
@@ -76,14 +94,14 @@ const PoolCard = (props) => {
             ))}
             {questions.length > 3 && (
               <li className="list-group-item text-muted">
-                <small>+ {questions.length - 3} preguntas más...</small>
+                <small>{t.poolCard.moreQuestions.replace('{count}', questions.length - 3)}</small>
               </li>
             )}
           </ul>
         </div>
         <div className="d-flex justify-content-between align-items-center mt-3">
           <Link to={`/templates/${id}`} className="btn btn-primary me-2">
-            Ver más
+            {t.poolCard.viewMore}
           </Link>
           <button
             disabled={!isAuthenticated}
@@ -105,7 +123,6 @@ const PoolCard = (props) => {
       </div>
     </div>
   );
-}
-export default PoolCard;
-<FontAwesomeIcon icon={faTrash} className="me-2" />
+};
 
+export default PoolCard;
