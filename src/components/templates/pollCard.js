@@ -5,16 +5,16 @@ import { faHeart, faCommenting, faTrash } from '@fortawesome/free-solid-svg-icon
 import { likeTemplate, unlikeTemplate } from '../../services/api';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
-import { translations } from '../translations'; // Importar el archivo de traducciones
+import { translations } from '../translations';
 
-const PoolCard = (props) => {
+const PollCard = (props) => {
   const { name, description, questions, id, likes, likedBy, comments } = props.pool;
   const [currentLikes, setLikes] = useState(likes);
   const [hasLiked, setHasLiked] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const adminId = useSelector((state) => state.admin.admin.id);
-  const currentLang = useSelector((state) => state.lang.lang); // Obtener el idioma actual
-  const t = translations[currentLang]; // Acceder a las traducciones
+  const currentLang = useSelector((state) => state.lang.lang);
+  const t = translations[currentLang];
 
   useEffect(() => {
     const userId = adminId;
@@ -27,7 +27,7 @@ const PoolCard = (props) => {
     if (hasLiked) {
       Swal.fire({
         icon: "warning",
-        title: t.poolCard.alreadyLiked,
+        title: t.pollCard.alreadyLiked,
         confirmButtonText: "OK",
       });
       return;
@@ -41,10 +41,10 @@ const PoolCard = (props) => {
       setLikes(response.likes);
       setHasLiked(true);
     } catch (error) {
-      console.error(t.poolCard.likeError, error);
+      console.error(t.pollCard.likeError, error);
       Swal.fire({
         icon: "error",
-        title: t.poolCard.likeError,
+        title: t.pollCard.likeError,
         text: error.message || "Unknown error",
         confirmButtonText: "Try Again",
       });
@@ -60,10 +60,10 @@ const PoolCard = (props) => {
       setLikes(response.likes);
       setHasLiked(false);
     } catch (error) {
-      console.error(t.poolCard.unlikeError, error);
+      console.error(t.pollCard.unlikeError, error);
       Swal.fire({
         icon: "error",
-        title: t.poolCard.unlikeError,
+        title: t.pollCard.unlikeError,
         text: error.message || "Unknown error",
         confirmButtonText: "Try Again",
       });
@@ -85,7 +85,7 @@ const PoolCard = (props) => {
         </p>
 
         <div className="mt-3" style={{ height: "200px", overflowY: "auto" }}>
-          <h6>{t.poolCard.questions}:</h6>
+          <h6>{t.pollCard.questions}:</h6>
           <ul className="list-group">
             {questions.slice(0, 3).map((question, index) => (
               <li key={question.id} className="list-group-item">
@@ -94,14 +94,14 @@ const PoolCard = (props) => {
             ))}
             {questions.length > 3 && (
               <li className="list-group-item text-muted">
-                <small>{t.poolCard.moreQuestions.replace('{count}', questions.length - 3)}</small>
+                <small>{t.pollCard.moreQuestions.replace('{count}', questions.length - 3)}</small>
               </li>
             )}
           </ul>
         </div>
-        <div className="d-flex justify-content-between align-items-center mt-3">
+        <div className="card-action">
           <Link to={`/templates/${id}`} className="btn btn-primary me-2">
-            {t.poolCard.viewMore}
+            {t.pollCard.viewMore}
           </Link>
           <button
             disabled={!isAuthenticated}
@@ -110,7 +110,7 @@ const PoolCard = (props) => {
           >
             <FontAwesomeIcon icon={faHeart} /> {currentLikes}
           </button>
-          <div className="d-flex align-items-center ">
+          <div className="d-flex align-items-center">
             <FontAwesomeIcon icon={faCommenting} className="me-2" />
             <span>{comments.length}</span>
           </div>
@@ -125,4 +125,4 @@ const PoolCard = (props) => {
   );
 };
 
-export default PoolCard;
+export default PollCard;

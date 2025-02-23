@@ -1,4 +1,4 @@
-import Templates from "../templates/templates";
+import Polls from "../templates/polls";
 
 const Home = () => {
 
@@ -6,7 +6,7 @@ const Home = () => {
 
   return (
     <div>
-      <Templates />
+      <Polls />
     </div>
   );
 };

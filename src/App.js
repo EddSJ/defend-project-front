@@ -5,16 +5,16 @@ import ProtectedRoute from './components/protected-route';
 import AdminProtectedRoute from './components/admin-protected-route';
 import Login from './components/auth/login';
 import Register from './components/auth/register';
-import CreateTemplate from './components/templates/createTemplate';
+import CreatePoll from './components/templates/createPoll';
 import Home from './components/common/home';
 import NotFound from './components/common/notFound';
-import PoolShow from './components/templates/poolShow';
-import AdminPoolResponses from './components/templates/adminPoolResponses';
+import PollShow from './components/templates/pollShow';
+import AdminPollResponses from './components/templates/adminPollResponses';
 import Navbar from './components/common/navBar';
 import AdminIndex from './components/admin/adminIndex';
 import CreateAdminForm from './components/admin/createAdminForm';
-import EditTemplate from './components/templates/editTempplate';
-import UserTemplates from './components/templates/userTemplates';
+import EditPoll from './components/templates/editPoll';
+import UserPolls from './components/templates/userPolls';
 
 function App() {
 
@@ -27,16 +27,16 @@ function App() {
           <Route path="/" element={<Home />}/>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/templates/:id" element={<PoolShow /> } />
-          <Route path="/completed-templates/admin/:id" element={<AdminPoolResponses /> } />
+          <Route path="/register/admin" element={<CreateAdminForm />} />
+          <Route path="/templates/:id" element={<PollShow /> } />
+          <Route path="/completed-templates/admin/:id" element={<AdminPollResponses /> } />
           <Route element={<ProtectedRoute />}>
-            <Route path="/templates/admin/:id" element={<UserTemplates />} />
-            <Route path="/templates/create" element={<CreateTemplate />} />
-            <Route path="/template/:id/edit" element={<EditTemplate />} />
+            <Route path="/templates/admin/:id" element={<UserPolls />} />
+            <Route path="/templates/create" element={<CreatePoll />} />
+            <Route path="/template/:id/edit" element={<EditPoll />} />
           </Route>
           <Route element={<AdminProtectedRoute />}>
             <Route path="/users" element={<AdminIndex />} />
-            <Route path="/user" element={<CreateAdminForm />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

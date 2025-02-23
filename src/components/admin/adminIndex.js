@@ -3,14 +3,14 @@ import ActionToolbar from "./actionToolBar";
 import { getAdmins, blockAdmins, unblockAdmins, deleteAdmins } from "../../services/api";
 import { useSelector } from "react-redux";
 import Swal from 'sweetalert2';
-import { translations } from '../translations'; // Importar el archivo de traducciones
+import { translations } from '../translations';
 
 const AdminIndex = () => {
   const [admins, setAdmins] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [error, setError] = useState(null);
-  const currentLang = useSelector((state) => state.lang.lang); // Obtener el idioma actual
-  const t = translations[currentLang]; // Acceder a las traducciones
+  const currentLang = useSelector((state) => state.lang.lang);
+  const t = translations[currentLang];
 
   const handleAction = async (action) => {
     try {

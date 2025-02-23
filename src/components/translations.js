@@ -17,7 +17,7 @@ export const translations = {
       message: "Sorry, the page you are looking for does not exist.",
       button: "Return to Home"
     },
-    adminPoolResponses: {
+    AdminPollResponses: {
       error: "Error fetching completed templates:",
     },
     createTemplate: {
@@ -34,6 +34,12 @@ export const translations = {
       addQuestion: "Add Question",
       addedQuestions: "Added Questions",
       createTemplateButton: "Create Template",
+      optionsSelection: {
+        text: "Text",
+        number: "Number",
+        textArea: "Text Area",
+        options: "Options"
+      }
     },
     editTemplate: {
       loading: "Loading...",
@@ -48,8 +54,10 @@ export const translations = {
       multipleOptions: "Multiple Options",
       saveChanges: "Save Changes",
       unauthorized: "You are not authorized to edit this template.",
+      addOption: "Add Option",
+
     },
-    poolCard: {
+    pollCard: {
       alreadyLiked: "You have already liked this template.",
       likeError: "Error liking template:",
       unlikeError: "Error unliking template:",
@@ -68,7 +76,7 @@ export const translations = {
       errorFetchingComments: "Error fetching comments:",
       errorCreatingComment: "Error creating comment:",
     },
-    poolResponse: {
+    pollResponse: {
       answeredBy: "Answered by:",
       numberOfAnswers: "Number of answers:",
       answers: "Answers:",
@@ -123,7 +131,34 @@ export const translations = {
       createAdmin: "Create Admin",
       errorCreatingAdmin: "Error creating admin:",
       successCreatingAdmin: "Admin created successfully!",
-    }
+    },
+    login: {
+      loginTitle: "Login",
+      email: "Email",
+      enterEmail: "Enter your email",
+      password: "Password",
+      enterPassword: "Enter your password",
+      loginButton: "Login",
+      noAccount: "Don't have an account?",
+      registerHere: "Register here",
+      loginError: "Error logging in:",
+    },
+    registerForm: {
+      registerTitle: "Register",
+      name: "Name",
+      enterName: "Enter your name",
+      lastName: "Last Name",
+      enterLastName: "Enter your last name",
+      email: "Email",
+      enterEmail: "Enter your email",
+      password: "Password",
+      enterPassword: "Enter your password",
+      registerButton: "Register",
+      alreadyHaveAccount: "Already have an account?",
+      loginHere: "Login here",
+      registerError: "Error registering user:",
+    },
+    
   },
   es: {
     common: {
@@ -143,7 +178,7 @@ export const translations = {
       message: "Lo sentimos, la página que estás buscando no existe.",
       button: "Volver al inicio"
     },
-    adminPoolResponses: {
+    AdminPollResponses: {
       error: "Error al obtener templates completados:",
     },
     createTemplate: {
@@ -160,6 +195,12 @@ export const translations = {
       addQuestion: "Agregar Pregunta",
       addedQuestions: "Preguntas agregadas",
       createTemplateButton: "Crear Plantilla",
+      optionsSelection: {
+        text: "Texto",
+        number: "Número",
+        textArea: "Área de texto",
+        options: "Opciones"
+      }
     },
     editTemplate: {
       loading: "Cargando...",
@@ -174,8 +215,9 @@ export const translations = {
       multipleOptions: "Múltiples opciones",
       saveChanges: "Guardar Cambios",
       unauthorized: "No estás autorizado para editar esta plantilla.",
+      addOption: "Agregar Opción",
     },
-    poolCard: {
+    pollCard: {
       alreadyLiked: "Ya has dado like a esta plantilla.",
       likeError: "Error al dar like:",
       unlikeError: "Error al quitar like:",
@@ -194,7 +236,7 @@ export const translations = {
       errorFetchingComments: "Error al obtener comentarios:",
       errorCreatingComment: "Error al crear comentario:",
     },
-    poolResponse: {
+    pollResponse: {
       answeredBy: "Respondido por:",
       numberOfAnswers: "Número de respuestas:",
       answers: "Respuestas:",
@@ -249,6 +291,32 @@ export const translations = {
       createAdmin: "Crear Administrador",
       errorCreatingAdmin: "Error al crear administrador:",
       successCreatingAdmin: "¡Administrador creado exitosamente!",
+    },
+    login: {
+      loginTitle: "Iniciar Sesión",
+      email: "Correo electrónico",
+      enterEmail: "Ingrese su correo electrónico",
+      password: "Contraseña",
+      enterPassword: "Ingrese su contraseña",
+      loginButton: "Iniciar Sesión",
+      noAccount: "¿No tienes una cuenta?",
+      registerHere: "Regístrate aquí",
+      loginError: "Error al iniciar sesión:",
+    },
+    registerForm: {
+      registerTitle: "Registrarse",
+      name: "Nombre",
+      enterName: "Ingrese su nombre",
+      lastName: "Apellido",
+      enterLastName: "Ingrese su apellido",
+      email: "Correo electrónico",
+      enterEmail: "Ingrese su correo electrónico",
+      password: "Contraseña",
+      enterPassword: "Ingrese su contraseña",
+      registerButton: "Registrarse",
+      alreadyHaveAccount: "¿Ya tienes una cuenta?",
+      loginHere: "Inicia sesión aquí",
+      registerError: "Error al registrar usuario:",
     }
   },
 };

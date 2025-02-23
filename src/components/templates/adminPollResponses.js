@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { getCompletedTemplates } from '../../services/api';
 import { useParams } from 'react-router-dom';
-import PoolResponse from './poolResponse';
+import PollResponse from './pollResponse';
 import { useSelector } from 'react-redux';
 import { translations } from '../translations';
 
-const AdminPoolResponses = () => {
+const AdminPollResponses = () => {
   const [completedTemplates, setCompletedTemplates] = useState([]);
   const { id } = useParams();
   const currentUser = useSelector(state => state.admin.admin);
@@ -19,7 +19,7 @@ const AdminPoolResponses = () => {
         setCompletedTemplates(data);
         console.log("data desde el template responses: ", data);
       } catch (error) {
-        console.error(t.adminPoolResponses.error, error);
+        console.error(t.AdminPollResponses.error, error);
       }
     };
 
@@ -35,7 +35,7 @@ const AdminPoolResponses = () => {
       <div className="row">
         {filteredTemplates.map((item) => (
           <div key={item.id} className="col-md-4 mb-4">
-            <PoolResponse pool={item} />
+            <PollResponse pool={item} />
           </div>
         ))}
       </div>
@@ -43,4 +43,4 @@ const AdminPoolResponses = () => {
   );
 };
 
-export default AdminPoolResponses;
+export default AdminPollResponses;

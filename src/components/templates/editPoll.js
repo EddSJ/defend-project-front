@@ -5,7 +5,7 @@ import { getTemplate, editTempplate } from "../../services/api";
 import Swal from "sweetalert2";
 import { translations } from '../translations';
 
-const EditTemplate = () => {
+const EditPoll = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const currentAdminId = useSelector((state) => state.admin.admin.id);
@@ -78,11 +78,22 @@ const EditTemplate = () => {
     }));
   };
 
+  const handleAddOption = (questionIndex) => {
+    const newQuestions = [...template.questions];
+    newQuestions[questionIndex].options.push(""); 
+    setTemplate((prevTemplate) => ({
+      ...prevTemplate,
+      questions: newQuestions,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      template.adminId = currentAdminId;
-      await editTempplate(id, template);
+      const { id, createdAt, updatedAt, ...templateData } = template;
+      templateData.adminId = currentAdminId;
+
+      await editTempplate(id, templateData);
       Swal.fire({
         icon: "success",
         title: t.editTemplate.success,
@@ -110,10 +121,10 @@ const EditTemplate = () => {
   }
 
   return (
-    <div className="container mt-4">
-      <h1>{t.editTemplate.saveChanges}</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
+    <div className="edit-template-container">
+      <h1 className="text-center mb-4">{t.editTemplate.saveChanges}</h1>
+      <form onSubmit={handleSubmit} className="edit-template-form">
+        <div className="form-section">
           <label className="form-label">{t.editTemplate.templateName}</label>
           <input
             type="text"
@@ -124,7 +135,7 @@ const EditTemplate = () => {
             required
           />
         </div>
-        <div className="mb-3">
+        <div className="form-section">
           <label className="form-label">{t.editTemplate.description}</label>
           <textarea
             name="description"
@@ -134,7 +145,7 @@ const EditTemplate = () => {
             required
           />
         </div>
-        <div className="mb-3 form-check">
+        <div className="form-section form-check">
           <input
             type="checkbox"
             name="isPublic"
@@ -144,10 +155,10 @@ const EditTemplate = () => {
           />
           <label className="form-check-label">{t.editTemplate.publicTemplate}</label>
         </div>
-        <div className="mt-4">
+        <div className="questions-section">
           <h3>{t.editTemplate.questions}</h3>
           {template.questions.map((q, index) => (
-            <div key={q.id} className="mb-3">
+            <div key={q.id} className="question-item">
               <p>
                 <strong>{t.editTemplate.questions} {index + 1}:</strong>
                 <input
@@ -169,23 +180,32 @@ const EditTemplate = () => {
                 <option value="CHECKBOX">{t.editTemplate.multipleOptions}</option>
               </select>
               {q.type === "CHECKBOX" && (
-                <ul>
-                  {q.options.map((option, idx) => (
-                    <li key={idx}>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={option}
-                        onChange={(e) => handleEditOption(index, idx, e.target.value)}
-                      />
-                    </li>
-                  ))}
-                </ul>
+                <div>
+                  <ul className="options-list">
+                    {q.options.map((option, idx) => (
+                      <li key={idx}>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={option}
+                          onChange={(e) => handleEditOption(index, idx, e.target.value)}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm"
+                    onClick={() => handleAddOption(index)}
+                  >
+                    {t.editTemplate.addOption}
+                  </button>
+                </div>
               )}
             </div>
           ))}
         </div>
-        <button type="submit" className="btn btn-success mt-3">
+        <button type="submit" className="btn btn-success submit-button">
           {t.editTemplate.saveChanges}
         </button>
       </form>
@@ -193,4 +213,4 @@ const EditTemplate = () => {
   );
 };
 
-export default EditTemplate;
+export default EditPoll;

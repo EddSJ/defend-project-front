@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import { translations } from '../translations';
 
-const PoolComments = () => {
+const PollComments = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState(''); 
@@ -76,32 +76,32 @@ const PoolComments = () => {
   };
 
   return (
-    <div className="mt-4">
+    <div className="pool-comments-container">
       { isAuthenticated && (
         <>
-          <h3>{t.poolComments.comments}</h3>
-          <div className="mb-3">
+          <h3 className="comments-title">{t.poolComments.comments}</h3>
+          <div className="comment-form">
             <textarea
-              className="form-control"
+              className="comment-input"
               rows="3"
               placeholder={t.poolComments.writeComment}
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
             />
-            <button onClick={handleCommentSubmit} className="btn btn-primary mt-2">
+            <button onClick={handleCommentSubmit} className="btn btn-primary send-button">
               {t.poolComments.sendComment}
             </button>
           </div>
         </>
       )}
-      <div>
+      <div className="comments-list">
         {comments.map((comment) => (
-          <div key={comment.id} className="card mb-2">
-            <div className="card-body">
-              <p className="card-text">{comment.content}</p>
-              <div className="d-flex justify-content-between">
-                <small className="text-muted">{t.poolComments.by} {fullName(comment.author)}</small>
-                <small className="text-muted">{t.poolComments.createdAt} {formatDate(comment.createdAt)}</small>
+          <div key={comment.id} className="comment-card">
+            <div className="comment-body">
+              <p className="comment-text">{comment.content}</p>
+              <div className="comment-footer">
+                <small className="comment-author">{t.poolComments.by} {fullName(comment.author)}</small>
+                <small className="comment-date">{t.poolComments.createdAt} {formatDate(comment.createdAt)}</small>
               </div>
             </div>
           </div>
@@ -111,4 +111,4 @@ const PoolComments = () => {
   );
 };
 
-export default PoolComments;
+export default PollComments;

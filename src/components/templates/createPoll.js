@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import Swal from "sweetalert2";
 import { translations } from '../translations';
 
-const CreateTemplate = () => {
+const CreatePoll = () => {
   const currentAdminId = useSelector((state) => state.admin.admin.id);
   const currentLang = useSelector((state) => state.lang.lang);
   const t = translations[currentLang];
@@ -127,9 +127,9 @@ const CreateTemplate = () => {
 
   return (
     <div className="container mt-4">
-      <h1>{t.createTemplate.createTemplateButton}</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
+      <h1 className="text-center mb-4">{t.createTemplate.createTemplateButton}</h1>
+      <form onSubmit={handleSubmit} className="form-container">
+        <div className="form-section">
           <label className="form-label">{t.createTemplate.templateName}</label>
           <input
             type="text"
@@ -140,7 +140,7 @@ const CreateTemplate = () => {
             required
           />
         </div>
-        <div className="mb-3">
+        <div className="form-section">
           <label className="form-label">{t.createTemplate.description}</label>
           <textarea
             name="description"
@@ -150,7 +150,7 @@ const CreateTemplate = () => {
             required
           />
         </div>
-        <div className="mb-3 form-check">
+        <div className="form-section form-check">
           <input
             type="checkbox"
             name="isPublic"
@@ -161,7 +161,7 @@ const CreateTemplate = () => {
           <label className="form-check-label">{t.createTemplate.publicTemplate}</label>
         </div>
 
-        <div className="mb-3">
+        <div className="form-section">
           <label className="form-label">{t.createTemplate.question}</label>
           <input
             type="text"
@@ -171,7 +171,7 @@ const CreateTemplate = () => {
             onChange={handleQuestionChange}
           />
         </div>
-        <div className="mb-3">
+        <div className="form-section">
           <label className="form-label">{t.createTemplate.questionType}</label>
           <select
             name="type"
@@ -180,14 +180,14 @@ const CreateTemplate = () => {
             onChange={handleQuestionChange}
             required
           >
-            <option value="TEXT">Texto</option>
-            <option value="NUMBER">Número</option>
-            <option value="TEXTAREA">Área de texto</option>
-            <option value="CHECKBOX">Checkbox</option>
+            <option value="TEXT">{t.createTemplate.optionsSelection.text}</option>
+            <option value="NUMBER">{t.createTemplate.optionsSelection.number}</option>
+            <option value="TEXTAREA">{t.createTemplate.optionsSelection.textArea}</option>
+            <option value="CHECKBOX">{t.createTemplate.optionsSelection.options}</option>
           </select>
         </div>
         {question.type === "CHECKBOX" && (
-          <div className="mb-3">
+          <div className="form-section">
             <label className="form-label">{t.createTemplate.options}</label>
             {question.options.map((option, index) => (
               <div key={index} className="mb-2">
@@ -256,4 +256,4 @@ const CreateTemplate = () => {
   );
 };
 
-export default CreateTemplate;
+export default CreatePoll;

@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setTemplates } from "../../redux/reducers/templates/templatesReducer";
 import { getTemplates } from '../../services/api';
-import PoolCard from "./poolCard";
+import PollCard from "./pollCard";
 import SearchBar from "../common/searchBar";
 import Swal from 'sweetalert2';
 import { translations } from '../translations';
 
-const Templates = () => {
+const Polls = () => {
   const dispatch = useDispatch();
   const [pools, setPools] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,7 +49,7 @@ const Templates = () => {
       <div className="row">
         {filteredPools.map((item) => (
           <div key={item.id} className="col-md-4 mb-4">
-            <PoolCard pool={item} />
+            <PollCard pool={item} />
           </div>
         ))}
       </div>
@@ -57,4 +57,4 @@ const Templates = () => {
   );
 };
 
-export default Templates;
+export default Polls;

@@ -3,12 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTemplates } from "../../redux/reducers/templates/templatesReducer";
 import { getAdminTemplates, deleteTemplate } from '../../services/api';
 import { useParams } from 'react-router-dom';
-import PoolCard from "./poolCard";
+import PollCard from "./pollCard";
 import SearchBar from "../common/searchBar";
 import Swal from 'sweetalert2';
 import { translations } from '../translations';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link, useNavigate } from 'react-router-dom';
 
-const UserTemplates = () => {
+
+const UserPolls = () => {
   const dispatch = useDispatch();
   const [pools, setPools] = useState([]);
   const { id } = useParams();
@@ -71,12 +75,15 @@ const UserTemplates = () => {
       <div className="row">
         {filteredPools.map((item) => (
           <div key={item.id} className="col-md-4 mb-4">
-            <PoolCard pool={item} deleteAction={handleDeleteTemplate} />
+            <PollCard pool={item} deleteAction={handleDeleteTemplate} />
           </div>
         ))}
       </div>
+      <Link to="/templates/create" className="floating-button">
+        <FontAwesomeIcon icon={faPlus} />
+      </Link>
     </div>
   );
 };
 
-export default UserTemplates;
+export default UserPolls;

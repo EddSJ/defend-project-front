@@ -3,11 +3,13 @@ import { getTemplate, createTemplate } from '../../services/api';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import PoolComments from './poolComments';
+import PollComments from './pollComments';
 import Swal from 'sweetalert2';
 import { translations } from '../translations';
+import { faPaperPlane, faCheckToSlot, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const PoolShow = () => {
+const PollShow = () => {
   const [pool, setPool] = useState({});
   const [responses, setResponses] = useState({});
   const { id } = useParams();
@@ -148,46 +150,51 @@ const PoolShow = () => {
   };
 
   return (
-    <div className="card shadow-sm mb-4 p-4">
-      <h1>{pool.name}</h1>
-      <p>{pool.description}</p>
-      <p><strong>{t.poolShow.createdBy}</strong> {pool.admin?.name}</p>
-
-      <form>
-        {pool.questions?.map((question) => (
-          <div key={question.id} className="mb-3">
-            <label className="form-label">{question.question}</label>
-            {renderInput(question)}
-            {`id del que creo el pool: ${pool.adminId}`}
-            {`id del que esta logeado: ${adminId}`}
+    <div className="pool-show-main-container">
+      <div className="pool-show-right">
+        <div className="card shadow-sm mb-4 p-4 pool-show-container">
+          <h1 className="text-center mb-4">{pool.name}</h1>
+          <p className="text-center">{pool.description}</p>
+          <p className="text-center"><strong>{t.poolShow.createdBy}</strong> {pool.admin?.name}</p>
+  
+          <form className="pool-show-form">
+            {pool.questions?.map((question) => (
+              <div key={question.id} className="mb-3">
+                <label className="form-label">{question.question}</label>
+                {renderInput(question)}
+              </div>
+            ))}
+          </form>
+  
+          <div className="bubble-buttons">
+            {!isAuthenticated ? (
+              <button onClick={handleLoginRedirect} className="btn btn-warning bubble-button">
+                {t.poolShow.loginToAnswer}
+              </button>
+            ) : (
+              <>
+                <button onClick={handleSubmit} className="btn btn-success bubble-button">
+                  <FontAwesomeIcon icon={faPaperPlane} />
+                </button>
+                <Link to={`/completed-templates/admin/${pool.id}`} className="btn btn-primary bubble-button">
+                  <FontAwesomeIcon icon={faCheckToSlot} />
+                </Link>
+                {adminOrCreator() && (
+                  <Link to={`/template/${pool.id}/edit`} className="btn btn-primary bubble-button">
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                  </Link>
+                )}
+              </>
+            )}
           </div>
-        ))}
-      </form>
-      {!isAuthenticated ? (
-        <button onClick={handleLoginRedirect} className="btn btn-warning mt-3">
-          {t.poolShow.loginToAnswer}
-        </button>
-      ) : (
-        <>
-          <button onClick={handleSubmit} className="btn btn-success mt-3">
-            {t.poolShow.submit}
-          </button>
-          <Link to={`/completed-templates/admin/${pool.id}`} className="btn btn-primary mt-3">
-            {t.poolShow.viewResponses}
-          </Link>
-          {adminOrCreator() && (
-            <Link to={`/template/${pool.id}/edit`} className="btn btn-primary mt-3">
-              {t.poolShow.editTemplate}
-            </Link>
-          )}
-        </>
-      )}
-      <button onClick={handleBack} className="btn btn-primary mt-3">
-        {t.poolShow.backToHome}
-      </button>
-      <PoolComments />
+        </div>
+      </div>
+  
+      <div className="pool-show-left">
+        <PollComments />
+      </div>
     </div>
   );
 };
 
-export default PoolShow;
+export default PollShow;

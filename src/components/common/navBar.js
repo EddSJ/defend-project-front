@@ -10,8 +10,8 @@ import { translations } from '../translations';
 import { setLang } from '../../redux/reducers/lang';
 
 const Navbar = () => {
-  const currentLang = useSelector((state) => state.lang.lang)
-  const t = translations[currentLang]
+  const currentLang = useSelector((state) => state.lang.lang);
+  const t = translations[currentLang];
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -45,14 +45,14 @@ const Navbar = () => {
         } catch (error) {
           console.error("Error al validar token:", error);
         }
-      }
+      };
       checkToken();
     }
   }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
-      const fetchAdnSetAdmin = async () => {
+      const fetchAndSetAdmin = async () => {
         const storedAdminId = localStorage.getItem('adminId');
         try {
           const data = await getAdmin(storedAdminId);
@@ -60,18 +60,17 @@ const Navbar = () => {
           dispatch(setAdmin(data));
         } catch (error) {
           console.error("Error al obtener admin:", error);
-        };
+        }
       };
-      fetchAdnSetAdmin();
+      fetchAndSetAdmin();
     }
   }, [isAuthenticated, dispatch]);
 
   const changeLang = () => {
     const newLang = currentLang === "en" ? "es" : "en";
     dispatch(setLang(newLang));
-    localStorage.setItem('lang', newLang)
-  }
-
+    localStorage.setItem('lang', newLang);
+  };
 
   return (
     <nav className="navbar">
@@ -96,8 +95,8 @@ const Navbar = () => {
         )}
         {isAuthenticated && (
           <>
-            <Link to={`templates/admin/${currentAdminId}`} className="navbar-link">
-              {t.navBar.polls} 
+            <Link to={`/templates/admin/${currentAdminId}`} className="navbar-link">
+              {t.navBar.polls}
             </Link>
             <button onClick={handleLogout} className="navbar-link logout-button">
               {t.navBar.signOut}
@@ -109,8 +108,8 @@ const Navbar = () => {
             )}
           </>
         )}
-        <button onClick={changeLang} className="navbar-link logout-button">
-          {t.common.lang} <FontAwesomeIcon icon={faEarthAmericas} />
+        <button onClick={changeLang} className="navbar-link lang-button">
+          <FontAwesomeIcon icon={faEarthAmericas} /> {t.common.lang}
         </button>
       </div>
     </nav>
