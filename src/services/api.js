@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const API_URL = "http://localhost:3500/api";
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const api = axios.create({ baseURL: API_URL });
 
@@ -28,7 +27,7 @@ export const signin = async (email, password) => {
 };
 
 export const getTemplates = async (searchTerm = "") => {
-  const response = await api.get(`/templates?searcj=${searchTerm}`);
+  const response = await api.get(`/templates?search=${searchTerm}`);
   return response.data;
 };
 
